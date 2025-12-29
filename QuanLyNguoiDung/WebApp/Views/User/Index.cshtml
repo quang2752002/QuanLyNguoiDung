@@ -1,0 +1,120 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card mb-4">
+            <div class="card-header py-3">
+                <h5 class="m-0 font-weight-bold text-primary">Danh Sách Người Dùng  </h5>
+            </div>
+            <div class="card-body">
+                <div class="row p-2">
+                    <div class="col-md-3">
+                        <a href="/User/Create" class="btn btn-primary">Thêm Mới</a>
+                    </div>                 
+                </div>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>TT</th>
+                                <th>Họ Tên</th>
+                                <th>Ngày Sinh </th>
+                                <th>Email</th>
+                                <th>SDT</th>
+                                <th>Địa Chỉ</th>
+                                <th class='text-center'>Hành Động</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbData"></tbody>
+                        <tfoot>
+                            <tr>
+                                <th colspan="100" id="pages"></th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        var user = {
+            init: function () {
+                user.getAll();
+            },
+            getAll: function (index) {
+                $.ajax({
+                    type: 'GET',
+                    dataType: 'json',
+                    contentType: false,
+                    processData: false,
+
+                    url: '/User/GetAll/',
+                    success: function (res) {
+                        var html = "";
+                        $.each(res.data, function (index, a) {
+
+
+                            html += "<tr>";
+                            html += "<td>" + (index + 1) + "</td>";
+                            html += "<td>" + a.hoTen + "</td>";
+                            html += "<td>" + a.dobText + "</td>";
+                            html += "<td>" + a.email + "</td>";
+                            html += "<td>" + a.sdt + "</td>";
+                            html += "<td>" + a.diaChi + "</td>";
+                            html += "<td class='text-center'>";
+                            html += "<div class='d-flex justify-content-center gap-3'>";
+
+                            html += "<a href='/User/Edit/" + a.id + "' title='Sửa'>";
+                            html += "<i class='fa-solid fa-pen-to-square text-primary'></i>";
+                            html += "</a>";
+
+                            html += "<a href='javascript:void(0)' onclick='user.delete(\"" + a.id + "\")' title='Xóa'>";
+                            html += "<i class='fa fa-trash text-danger'></i>";
+                            html += "</a>";
+
+                            html += "</div>";
+                            html += "</td>";
+                            html += "</tr>";
+
+                        });
+                        $("#tbData").html(html);
+
+                    },
+                });
+            },
+
+
+            delete: function (id) {
+                if (!confirm("Bạn có chắc chắn muốn xóa người dùng này không?")) return;
+
+                $.ajax({
+                    url: '/User/Delete?id=' + id,
+                    type: 'DELETE',
+                    success: function (res) {
+                        alert(res.message);
+                        user.getAll();
+                    },
+                    error: function (xhr) {
+                        if (xhr.responseJSON?.message) {
+                            alert(xhr.responseJSON.message);
+                        } else {
+                            alert("Xóa thất bại");
+                        }
+                    }
+                });
+            }
+
+        };
+       
+
+        user.init();
+       
+    </script>
+}

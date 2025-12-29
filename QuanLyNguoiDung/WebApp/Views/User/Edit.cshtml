@@ -1,0 +1,79 @@
+﻿@model Application.DTOs.UserDto
+
+@{
+    ViewData["Title"] = "Cập nhật người dùng";
+}
+
+<h4 class="mb-3">Cập nhật người dùng</h4>
+
+<form id="editForm" onsubmit="return false;">
+    @Html.HiddenFor(m => m.Id)
+
+    <div class="mb-3">
+        <label class="form-label">Họ tên</label>
+        <input asp-for="HoTen" class="form-control" />
+        <span asp-validation-for="HoTen" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Ngày sinh</label>
+        <input asp-for="Dob" type="date" class="form-control" />
+        <span asp-validation-for="Dob" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Email</label>
+        <input asp-for="Email" class="form-control" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Số điện thoại</label>
+        <input asp-for="Sdt" class="form-control" />
+        <span asp-validation-for="Sdt" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Địa chỉ</label>
+        <input asp-for="DiaChi" class="form-control" />
+    </div>
+
+    <button type="button" class="btn btn-primary" onclick="updateUser()">
+        <i class="fa-solid fa-save"></i> Lưu
+    </button>
+
+    <a href="/User/Index" class="btn btn-secondary ms-2">
+        Quay lại
+    </a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        function updateUser() {
+            if (!$("#editForm").valid()) {
+                return;
+            }
+            var data = {
+                id: $("#Id").val(),
+                hoTen: $("#HoTen").val(),
+                dob: $("#Dob").val(),
+                email: $("#Email").val(),
+                sdt: $("#Sdt").val(),
+                diaChi: $("#DiaChi").val()
+            };
+
+            $.ajax({
+                url: '/User/Update',
+                type: 'PUT',
+                contentType: 'application/json',
+                data: JSON.stringify(data),
+                success: function (res) {
+                    alert(res.message);
+                    window.location.href = "/User/Index";
+                },              
+            });
+        }
+    </script>
+}
