@@ -8,11 +8,9 @@ using System.Threading.Tasks;
 
 namespace Domain.Interface
 {
-    public interface IUnitOfWork :  IDisposable
+    public interface IUnitOfWork : IDisposable
     {
-        IRepository<User> Users { get; }
-       
-
+        IUserRepository Users { get; }
         Task<int> SaveChangesAsync();
     }
 }

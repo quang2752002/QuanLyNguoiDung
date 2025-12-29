@@ -1,5 +1,4 @@
-﻿using Domain.Entities;
-using Domain.Interface;
+﻿using Domain.Interface;
 using Domain.Interfaces;
 
 namespace Infrastructure.Repositories
@@ -8,12 +7,12 @@ namespace Infrastructure.Repositories
     {
         private readonly ApplicationDbContext _context;
 
-        public IRepository<User> Users { get; }
+        public IUserRepository Users { get; }
 
         public UnitOfWork(ApplicationDbContext context)
         {
             _context = context;
-            Users = new Repository<User>(_context);
+            Users = new UserRepository(_context);
         }
 
         public async Task<int> SaveChangesAsync()
